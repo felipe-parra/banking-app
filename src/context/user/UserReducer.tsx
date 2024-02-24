@@ -1,10 +1,12 @@
+import { UserType } from "@/interfaces/user.interface"
 import { IUserState } from "./UserProvider"
 
 type UserActionType =
   | { type: "SET_IS_LOADING", payload: boolean }
   | { type: "SET_IS_ERROR", payload: boolean }
-  | { type: "SET_USER", payload: null }
+  | { type: "SET_USER", payload: UserType }
   | { type: "SET_ACCOUNT", payload: null }
+  | { type: "SET_TOKEN", payload: string | null }
 
 export function UserReducer(state: IUserState, action: UserActionType): IUserState {
   switch (action.type) {
@@ -30,6 +32,12 @@ export function UserReducer(state: IUserState, action: UserActionType): IUserSta
       return {
         ...state,
         user: action.payload
+      }
+    }
+    case 'SET_TOKEN': {
+      return {
+        ...state,
+        token: action.payload
       }
     }
     default:

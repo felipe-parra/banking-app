@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/navigation-menu"
 import Sidebar from "./Sidebar"
 import ButtonTheme from "./ButtonTheme"
+import { useUserContext } from "@/context/user/useUserContext"
 
-export const NavLinks = [
+const NavLinks = [
   {
     id: "home",
     to: "/",
@@ -37,11 +38,12 @@ export const NavLinks = [
 ]
 
 export default function Navbar() {
+  const { user } = useUserContext()
   const navigate = useNavigate()
   return (
     <section className="navbar-container">
       <article className="flex-1" onClick={() => navigate("/")}>
-        <h1>Bank</h1>
+        <h1>{user?.name ? "Hi " + user.name : "Bank"}</h1>
       </article>
       <article className="block md:hidden">
         <Sidebar />

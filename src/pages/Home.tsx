@@ -1,40 +1,41 @@
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { ResultInstitutionType } from '@/types/belvo.types'
+import { useEffect } from 'react'
+import { InstitutionType } from '@/types/belvo.types'
+import { useBankingContext } from '@/context/banking/useBankingContext'
 
 export default function HomePage() {
-  const [page, setPage] = useState(1)
-  const [institutions, setInstitutions] = useState<ResultInstitutionType[]>([])
+  const { institutions, isLoading, doGetInstitutions } = useBankingContext()
+
 
 
   useEffect(() => {
+    doGetInstitutions()
 
-    const getInstitutions = async () => {
-      const { data } = await axios({
-        method: "GET",
-        url: "http://localhost:65016/api/v1/belvo/institutions?page=" + page,
-        timeout: 60000 * 60 * 24
-      })
-
-      setInstitutions(data.results)
-      return
-    }
-    getInstitutions()
-
-    return () => {
-      getInstitutions
-    }
-  }, [page])
+  }, [])
 
   return (
     <section>
+      {
+        isLoading && <p>Loading...</p>
+      }
       <article>
         {
           institutions.length > 0
-            ? institutions.map((institution, index) => <p key={"ins-" + index}>{institution?.display_name ?? "Banki"}</p>)
-            : <p>Nothing here</p>
+          && institutions.map((institution, index) => (
+            <InstitutionItem key={index} institution={institution} />
+          ))
+
         }
       </article>
     </section>
+  )
+}
+
+
+function InstitutionItem({ institution }: { institution: InstitutionType }) {
+  return (
+    <article>
+      <img src={institution.logo} alt={institution.name} />
+      <h3>{institution.name}</h3>
+    </article>
   )
 }

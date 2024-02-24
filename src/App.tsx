@@ -8,6 +8,7 @@ import MainLayout from './components/layouts/MainLayout'
 import AuthLayout from './components/layouts/AuthLayout'
 import './App.css'
 import NotFound from './components/NotFound'
+import ProtectedRoute from './router/ProtectedRoute'
 
 export default function App() {
   return (
@@ -18,10 +19,14 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/account" element={<AccountPage />} />
-        <Route path="/bank" element={<BankPage />} />
-        <Route path='*' element={<NotFound />} />
+        <Route
+          element={<ProtectedRoute element={<AuthLayout />} />}
+        >
+          <Route path="/" element={<HomePage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/bank" element={<BankPage />} />
+          <Route path='*' element={<NotFound />} />
+        </Route>
       </Route>
     </Routes>
 
