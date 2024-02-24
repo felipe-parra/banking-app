@@ -78,5 +78,17 @@
 @layer components {
   .main-container {
     @apply w-svw h-svh;
+    @apply bg-secondary;
+  }
+  .outlet-container {
+    @apply w-full h-full;
+    @apply p-4;
+    @apply bg-white dark:bg-slate-900;
+  }
+  .navbar-container {
+    @apply w-full h-auto;
+    @apply flex items-center justify-between p-4;
+    @apply bg-white dark:bg-zinc-950;
+    @apply drop-shadow-sm;
   }
 }
