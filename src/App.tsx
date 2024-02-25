@@ -13,7 +13,7 @@ export default function App() {
   const RegisterPage = lazy(() => import('@/pages/Register'))
   const HomePage = lazy(() => import('@/pages/Home'))
   const AccountPage = lazy(() => import('@/pages/Account'))
-  const BankPage = lazy(() => import('@/pages/Bank'))
+  const TransactionsPage = lazy(() => import('@/pages/Transactions'))
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -34,7 +34,7 @@ export default function App() {
           >
             <Route path="/" element={<HomePage />} />
             <Route path="/account" element={<AccountPage />} />
-            <Route path="/bank" element={<BankPage />} />
+            <Route path="/bank" element={<TransactionsPage />} />
           </Route>
           <Route path='*' element={<NotFound />} />
         </Route>
