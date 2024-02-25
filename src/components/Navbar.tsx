@@ -51,16 +51,19 @@ export default function Navbar() {
       <NavigationMenu className="hidden md:flex md:items-center md:justify-end md:w-full mx-2">
         <NavigationMenuList>
           {
-            NavLinks.map(({ id, to, name }, index) => (
-              <NavigationMenuItem key={"nav-link-" + id + index}>
-                <Link to={to}>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    {name}
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
+            NavLinks.map(({ id, to, name }, index) => {
+              if (user?.name !== undefined && id === "login") return null
+              return (
+                <NavigationMenuItem key={"nav-link-" + id + index}>
+                  <Link to={to}>
+                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                      {name}
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
 
-            ))
+              )
+            })
           }
         </NavigationMenuList>
       </NavigationMenu>
