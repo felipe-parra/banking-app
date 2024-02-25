@@ -21,14 +21,14 @@ export const getAllInstitutionsApi = async (): Promise<
   }
 };
 
-export const getAccountsApi = async (link: string, page: number) => {
+export const getAccountsApi = async (link: string, page = 1) => {
   try {
     const { data } = await baseAxios({
       method: "GET",
-      url: `${SUFFIX}/accounts?page=${page}&account=${link}`,
+      url: `${SUFFIX}/accounts?page=${page}&link=${link}`,
     });
 
-    console.log(data.data);
+    console.log({ data });
 
     return data.data;
   } catch (error) {
@@ -45,6 +45,25 @@ export const getTransactionsApi = async (link: string, page: number) => {
     });
 
     console.log(data.data);
+
+    return data.data;
+  } catch (error) {
+    console.error({ error });
+    return null;
+  }
+};
+
+export const createLinkApi = async (formData: { [key: string]: string }) => {
+  try {
+    console.log({ formData });
+    const { data } = await baseAxios({
+      method: "POST",
+      headers: { "Content-Type": "multipart/form-data" },
+      url: SUFFIX + "/register-link",
+      data: formData,
+    });
+
+    console.log("[API]", { data });
 
     return data.data;
   } catch (error) {
