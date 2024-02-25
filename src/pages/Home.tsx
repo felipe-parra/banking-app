@@ -40,7 +40,7 @@ export default function HomePage() {
 
 function InstitutionItem({ institution }: { institution: InstitutionType }) {
   return (
-    <Card className='w-[350px] h-full max-h-64 md:w-full relative flex flex-col justify-between p-4'>
+    <Card className='w-[350px] fade-in duration-300 h-full max-h-64 md:w-full relative flex flex-col justify-between p-4'>
       <div className='absolute top-3 right-3 z-10'>
         <FlagItem countryCode={institution.country_code} />
       </div>
