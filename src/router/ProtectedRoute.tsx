@@ -1,6 +1,7 @@
 import { useUserContext } from '@/context/user/useUserContext'
 import PageLoader from '@/pages/PageLoader'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { toast } from 'sonner';
 
 interface Props {
   path?: string
@@ -18,6 +19,15 @@ export default function ProtectedRoute({ path = "/loading", replace = false }: P
   }
 
   if (token === null) {
+    {
+      toast("Access denied", {
+        description: "You need to be logged before to acces this route",
+        action: {
+          label: "dismiss",
+          onClick: () => console.log("Undo"),
+        },
+      })
+    }
     return <Navigate to={path} replace={replace} state={{ path: location.pathname }} />
   }
 
