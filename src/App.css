@@ -75,6 +75,15 @@
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @layer components {
   .main-container {
     @apply w-svw h-svh;
@@ -90,5 +99,8 @@
     @apply flex items-center justify-between p-4;
     @apply bg-white dark:bg-zinc-950;
     @apply drop-shadow-sm;
+  }
+  .fade-in {
+    animation: fadeIn 1s ease-in-out;
   }
 }
