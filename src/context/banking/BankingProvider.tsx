@@ -41,7 +41,7 @@ export const BankingProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: "SET_IS_ERROR", payload: true })
 
     } finally {
-      dispatch({ type: "SET_IS_LOADING", payload: true })
+      dispatch({ type: "SET_IS_LOADING", payload: false })
 
     }
   }

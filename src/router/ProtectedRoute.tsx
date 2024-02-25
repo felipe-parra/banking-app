@@ -1,14 +1,25 @@
 import { useUserContext } from '@/context/user/useUserContext'
-import { ReactNode } from 'react'
-import { Navigate } from 'react-router-dom'
+import PageLoader from '@/pages/PageLoader'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
+
+interface Props {
+  path?: string
+  replace?: boolean
+}
+
+export default function ProtectedRoute({ path = "/loading", replace = false }: Props) {
+
+  const { token, isLoading } = useUserContext()
+  const location = useLocation()
 
 
-export default function PrivateRoutes({ element }: { element: ReactNode }) {
-  const { token } = useUserContext()
-
-  if (!token) {
-    return <Navigate to="/login" replace />
+  if (isLoading) {
+    return <PageLoader />
   }
 
-  return element
+  if (token === null) {
+    return <Navigate to={path} replace={replace} state={{ path: location.pathname }} />
+  }
+
+  return <Outlet />
 }
