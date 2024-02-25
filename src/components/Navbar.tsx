@@ -14,6 +14,8 @@ import Sidebar from "./Sidebar"
 import ButtonTheme from "./ButtonTheme"
 import { useUserContext } from "@/context/user/useUserContext"
 import { NavLinks } from "@/constants/nav-links"
+import { Button } from "./ui/button"
+import { FaGithub } from "react-icons/fa"
 
 
 export default function Navbar() {
@@ -43,6 +45,14 @@ export default function Navbar() {
               )
             })
           }
+          <Button className="text-primary" variant={"ghost"} asChild>
+            <a href="https://github.com/felipe-parra/banking-app">
+              <FaGithub />
+              <span className="mx-2">
+                Github
+              </span>
+            </a>
+          </Button>
         </NavigationMenuList>
       </NavigationMenu>
       <article className="md:block hidden">
