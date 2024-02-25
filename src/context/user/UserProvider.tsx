@@ -3,7 +3,7 @@ import { UserContext } from "./UserContext";
 import { UserReducer } from "./UserReducer";
 import { LoginFormType, UserType } from "@/interfaces/user.interface";
 import { doLoginUserApi, doRegisterUserApi } from "@/api/authApi";
-
+import { toast } from 'sonner'
 export interface IUserState {
   user: UserType | null;
   token: string | null;
@@ -33,8 +33,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: "SET_TOKEN", payload: loggedUser.token })
     } catch (error) {
       dispatch({ type: "SET_IS_ERROR", payload: true })
+      {
+        toast("Error", {
+          description: "Something wen't wrong with your login, try again",
+          action: {
+            label: "dismiss",
+            onClick: () => dispatch({ type: "SET_IS_ERROR", payload: false }),
+          },
+        })
+      }
     } finally {
-
       dispatch({ type: "SET_IS_LOADING", payload: false })
     }
   }
@@ -48,8 +56,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: "SET_USER", payload: loggedUser.user })
       dispatch({ type: "SET_TOKEN", payload: loggedUser.token })
     } catch (error) {
-
       dispatch({ type: "SET_IS_ERROR", payload: true })
+      {
+        toast("Error", {
+          description: "Something wen't wrong with your register, try again",
+          action: {
+            label: "dismiss",
+            onClick: () => dispatch({ type: "SET_IS_ERROR", payload: false }),
+          },
+        })
+      }
     } finally {
       dispatch({ type: "SET_IS_LOADING", payload: false })
     }
@@ -64,8 +80,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
       dispatch({ type: "SET_IS_ERROR", payload: true })
     } finally {
-
       dispatch({ type: "SET_IS_LOADING", payload: false })
+      {
+        toast("Error", {
+          description: "Something wen't wrong, try again",
+          action: {
+            label: "dismiss",
+            onClick: () => dispatch({ type: "SET_IS_ERROR", payload: false }),
+          },
+        })
+      }
     }
   }
   const setAccount = async () => {
@@ -73,8 +97,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: "SET_IS_ERROR", payload: false })
       dispatch({ type: "SET_IS_LOADING", payload: true })
     } catch (error) {
-
       dispatch({ type: "SET_IS_ERROR", payload: true })
+      {
+        toast("Error", {
+          description: "Something wen't wrong, try again",
+          action: {
+            label: "dismiss",
+            onClick: () => dispatch({ type: "SET_IS_ERROR", payload: false }),
+          },
+        })
+      }
     } finally {
 
       dispatch({ type: "SET_IS_LOADING", payload: false })
