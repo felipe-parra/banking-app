@@ -12,8 +12,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { InstitutionType } from "@/types/belvo.types"
+import { createLinkApi } from "@/api/belvoApi"
+import { useLocalStorage } from "@/hooks/useLocalStorage"
 
 export function ConnectForm({ institution }: { institution: InstitutionType }) {
+  const [localState, addItem] = useLocalStorage("links")
 
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
@@ -22,9 +25,17 @@ export function ConnectForm({ institution }: { institution: InstitutionType }) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const fullFormdata = { ...formData, ["institution"]: institution.name }
 
+    const response = await createLinkApi(fullFormdata)
+
+    if (!response) {
+      alert("Error creating link")
+    }
+    console.log({ localState })
+    addItem(response.id)
   };
   return (
     <Dialog>
