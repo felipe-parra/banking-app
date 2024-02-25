@@ -1,30 +1,36 @@
-# React + TypeScript + Vite
+# Banking web app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This a web app to connect your banking accounts and you can find your transactions
 
-Currently, two official plugins are available:
+## About tech stack
+Frontend was build it using React & TypeScript with ContextAPI, react-router-dom v6, TailwindCSS & Shadcnui
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React v18.2 & TypeScript
+- react-router-dom v6
+- TailwindCSS
+- Shadcn-ui
+- axios
+- react-icons
+- Vite
 
-## Expanding the ESLint configuration
+  
+## Running on local
+If you wanna run locally this project you should have backend url or run the backend locally [link](link), and update your file `.env` with your value, give you an example at `.env.example`
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+1. Clone this repo
+```sh
+git clone https://github.com/felipe-parra/banking-app.git
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Install modules
+```sh
+npm install 
+```
+3. Create your `.env` file with your backend value
+```sh
+VITE_URL_API=<VITE_URL_API>
+```
+4. Run project
+```sh
+npm run dev 
+```
+5. It's time to play, got to [http://localhost:5173](http://localhost:5173/login)
