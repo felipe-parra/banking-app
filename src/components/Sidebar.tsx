@@ -12,6 +12,8 @@ import { NavLinks } from "@/constants/nav-links";
 import { Link } from "react-router-dom";
 import { useUserContext } from "@/context/user/useUserContext";
 import { Button } from "./ui/button";
+import { FaGithub } from "react-icons/fa";
+
 
 export default function Sidebar() {
   const { user } = useUserContext()
@@ -43,8 +45,16 @@ export default function Sidebar() {
 
         </SheetHeader>
 
-        <article className="h-full w-full flex justify-between">
+        <article className="h-96 w-full flex flex-col items-start justify-between mt-10">
           <ButtonTheme />
+          <Button className="text-slate-50 dark:text-primary/70" variant={"ghost"} asChild>
+            <a href="https://github.com/felipe-parra/banking-app">
+              <FaGithub />
+              <span className="mx-2">
+                Github
+              </span>
+            </a>
+          </Button>
         </article>
       </SheetContent>
     </Sheet>
