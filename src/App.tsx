@@ -7,6 +7,7 @@ import PublicRoute from './router/PublicRoute'
 import { Suspense, lazy } from 'react'
 import NotFound from './components/NotFound';
 import AuthLayout from './components/layouts/AuthLayout';
+import { Toaster } from './components/ui/sonner';
 
 export default function App() {
   const LoginPage = lazy(() => import('@/pages/Login'))
@@ -39,6 +40,7 @@ export default function App() {
           <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>
+      <Toaster />
     </Suspense>
 
   )
