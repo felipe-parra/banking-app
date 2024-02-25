@@ -13,29 +13,8 @@ import {
 import Sidebar from "./Sidebar"
 import ButtonTheme from "./ButtonTheme"
 import { useUserContext } from "@/context/user/useUserContext"
+import { NavLinks } from "@/constants/nav-links"
 
-const NavLinks = [
-  {
-    id: "home",
-    to: "/",
-    name: "Home",
-  },
-  {
-    id: "login",
-    to: "/login",
-    name: "Login",
-  },
-  {
-    id: "account",
-    to: "/account",
-    name: "Account",
-  },
-  {
-    id: "bank",
-    to: "/bank",
-    name: "Transactions",
-  },
-]
 
 export default function Navbar() {
   const { user } = useUserContext()
@@ -61,7 +40,6 @@ export default function Navbar() {
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
-
               )
             })
           }
