@@ -1,4 +1,4 @@
-import { InstitutionType } from "@/types/belvo.types";
+import { InstitutionType, TransactionType } from "@/types/belvo.types";
 import { IBankingState } from "./BankingProvider";
 
 type BankingActionType =
@@ -6,7 +6,7 @@ type BankingActionType =
   | { type: "SET_IS_ERROR", payload: boolean }
   | { type: "SET_SELECTED_INSTITUTION", payload: InstitutionType }
   | { type: "SET_INSTITUTIONS", payload: InstitutionType[] }
-  | { type: "SET_TRANSACTIONS", payload: unknown[] }
+  | { type: "SET_TRANSACTIONS", payload: TransactionType[] }
 
 export function BankingReducer(state: IBankingState, action: BankingActionType): IBankingState {
   switch (action.type) {
