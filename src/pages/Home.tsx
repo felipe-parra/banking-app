@@ -3,7 +3,7 @@ import { InstitutionType } from '@/types/belvo.types'
 import { useBankingContext } from '@/context/banking/useBankingContext'
 import { Card } from '@/components/ui/card'
 import { ConnectForm } from '@/components/ConnectForm'
-import LoaderComponent from '@/components/LoaderComponent'
+import PageLoader from './PageLoader'
 
 export default function HomePage() {
   const { institutions, isLoading, doGetInstitutions } = useBankingContext()
@@ -15,14 +15,14 @@ export default function HomePage() {
 
 
   }, [])
-
+  if (isLoading) {
+    return (
+      <PageLoader />
+    )
+  }
   return (
     <section>
-      {
-        isLoading && <article className='w-full h-svh flex items-center justify-center'>
-          <LoaderComponent />
-        </article>
-      }
+
       <article className='w-full h-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 overflow-x-hidden'>
         {
           institutions.length > 0

@@ -1,21 +1,32 @@
-import { getTransactionsApi } from "@/api/belvoApi"
 import { Button } from "@/components/ui/button"
-import { TransactionType } from "@/types/belvo.types"
+import { useBankingContext } from "@/context/banking/useBankingContext"
 import { useEffect, useState } from "react"
 import { MdArrowBack } from "react-icons/md"
 import { useNavigate, useParams } from "react-router-dom"
+import PageLoader from "./PageLoader"
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { FormatNumber } from "@/utils"
+import { cn } from "@/lib/utils"
 
 
 export default function TransactionsPage() {
   const [page, setPage] = useState(1)
-  const [transactions, setTransactions] = useState<TransactionType[]>([])
   const { accountId } = useParams()
+  const { transactions, balance, isLoading, doGetTransactions } = useBankingContext()
   const navigate = useNavigate()
 
   useEffect(() => {
     const getTransactions = async (id: string) => {
-      const res = await getTransactionsApi({ link: id.slice(0, -1), page })
-      console.log({ res })
+
+      await doGetTransactions(id, page)
       return
     }
 
@@ -23,7 +34,6 @@ export default function TransactionsPage() {
       return
     }
 
-    // getTransactions("e86006cc-2d46-4833-856a-ae78b1a87132")
     getTransactions(accountId)
   }, [accountId])
 
@@ -35,25 +45,60 @@ export default function TransactionsPage() {
       </section>
     )
   }
+
+  if (isLoading) {
+    return (
+      <PageLoader />
+    )
+  }
   return (
     <section className="w-full h-svh flex flex-col items-start justify-start text-3xl relative">
       <Button onClick={() => navigate(-1)}>
         <MdArrowBack />
       </Button>
-
-      <span className="text-red-500">Transactions</span>
-
-      <article className="flex flex-col">
-        {accountId}
-
-        {
-          transactions.length && transactions.map((transaction) => (
-            <div key={transaction.id}>
-              {transaction.id}
-            </div>
-          ))
-        }
+      <article className="flex items-center justify-center w-full">
+        <h3 className="text-3xl text-center">Transactions</h3>
       </article>
+      <article className="w-full flex items-center justify-around">
+        <h5>Balance</h5>
+        <p>{FormatNumber(balance ?? 0, transactions[0]?.currency ?? "MXN")}{" " + transactions[0]?.currency ?? "MXN"}</p>
+      </article>
+      <Table>
+        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Invoice</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="hidden md:flex md:items-end md:justify-center md:h-full">Method</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {
+            transactions.length ? transactions.map((transaction) => (
+              <TableRow key={transaction.id}>
+                <TableCell className="font-medium">{transaction.internal_identification}</TableCell>
+                <TableCell>{transaction.status}</TableCell>
+                <TableCell className="hidden md:flex">{transaction.type}</TableCell>
+                <TableCell>{transaction.category}</TableCell>
+                <TableCell className={cn(
+                  "text-right",
+                  transaction.type === "OUTFLOW"
+                    ? "text-red-500" : "text-green-500"
+                )}>
+
+                  {transaction.type === "OUTFLOW" ? "-" : "+"}{" "}
+                  {
+                    FormatNumber(transaction.amount, transaction.currency ?? "MXN")
+                  }
+                </TableCell>
+              </TableRow>
+            ))
+              : null
+          }
+        </TableBody>
+      </Table>
     </section>
   )
 }

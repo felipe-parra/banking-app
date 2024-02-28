@@ -35,7 +35,7 @@ export const getAccountsApi = async ({
       url: `${SUFFIX}/accounts?page=${page}&link=${link}`,
     });
 
-    console.log({ data });
+    console.log(data.data.results);
 
     return data.data.results;
   } catch (error) {
@@ -61,7 +61,7 @@ export const getTransactionsApi = async ({
 
     console.log(data.data);
 
-    return data.data;
+    return data.data.results;
   } catch (error) {
     console.error({ error });
     return null;

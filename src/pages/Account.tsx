@@ -1,6 +1,6 @@
 import { AccountResponseType } from "@/types/belvo.types"
 
-import { Suspense, useEffect } from "react"
+import { useEffect } from "react"
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,7 +16,10 @@ export default function AccountPage() {
   const { accounts, isLoading, doGetAccounts } = useBankingContext()
 
   useEffect(() => {
-    doGetAccounts()
+    const getData = async () => {
+      await doGetAccounts()
+    }
+    getData()
   }, [])
 
   if (isLoading) {
@@ -24,18 +27,20 @@ export default function AccountPage() {
       <PageLoader />
     )
   }
+  console.log("OUTSIDE", {
+    accounts
+  })
   return (
-    <Suspense fallback={<PageLoader />}>
+    <>
       <article className='w-full h-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 overflow-x-hidden'>
-
         {
-          accounts.length > 0 && accounts.map((item, index) => (
+          accounts.length ? accounts.map((item, index) => (
             <InstitutionItem key={"account-key-" + index} account={item} />
 
-          ))
+          )) : null
         }
       </article>
-    </Suspense>
+    </>
   )
 }
 

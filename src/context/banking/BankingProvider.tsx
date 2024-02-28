@@ -2,7 +2,7 @@ import { type ReactNode, useReducer } from 'react'
 import { AccountResponseType, InstitutionType, TransactionType } from "@/types/belvo.types"
 import { BankingContext } from './BankingContext'
 import { BankingReducer } from './BankingReducer'
-import { createLinkApi, getAccountsApi, getAllInstitutionsApi } from '@/api/belvoApi'
+import { createLinkApi, getAccountsApi, getAllInstitutionsApi, getTransactionsApi } from '@/api/belvoApi'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { toast } from 'sonner'
 
@@ -13,6 +13,8 @@ export interface IBankingState {
   accounts: AccountResponseType[]
   isLoading: boolean
   isError: boolean
+  balance: number | null
+
 }
 
 const INITIAL_STATE: IBankingState = {
@@ -21,7 +23,8 @@ const INITIAL_STATE: IBankingState = {
   transactions: [],
   isLoading: false,
   isError: false,
-  accounts: []
+  accounts: [],
+  balance: null
 }
 
 export const BankingProvider = ({ children }: { children: ReactNode }) => {
@@ -60,15 +63,40 @@ export const BankingProvider = ({ children }: { children: ReactNode }) => {
 
     }
   }
-  const doGetTransactions = async () => {
+  const calculateBalance = (transactions: TransactionType[]): number => {
+    let balance = 0;
+    for (const transaction of transactions) {
+      if (transaction.type === "INFLOW") {
+        balance += transaction.amount;
+      } else if (transaction.type === "OUTFLOW") {
+        balance -= transaction.amount;
+      }
+    }
+    return balance;
+  }
+  const doGetTransactions = async (accountId: string, page?: number) => {
     try {
       dispatch({ type: "SET_IS_ERROR", payload: false })
       dispatch({ type: "SET_IS_LOADING", payload: true })
 
+      const transactions = await getTransactionsApi({ link: accountId, page: page ?? 1 })
 
+      console.log({ transactions })
+
+      dispatch({ type: "SET_TRANSACTIONS", payload: transactions })
+      const balance = calculateBalance(transactions)
+
+      dispatch({ type: "SET_BALANCE", payload: balance })
     } catch (error) {
       dispatch({ type: "SET_IS_ERROR", payload: true })
 
+      toast.error("Error", {
+        description: "Something wen't wrong, try again",
+        action: {
+          label: "dismiss",
+          onClick: () => dispatch({ type: "SET_IS_ERROR", payload: false }),
+        },
+      })
     } finally {
       dispatch({ type: "SET_IS_LOADING", payload: false })
 
@@ -80,27 +108,36 @@ export const BankingProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: "SET_IS_ERROR", payload: false })
       dispatch({ type: "SET_IS_LOADING", payload: true })
 
-      if (links) {
-        toast("No accounts founded",)
+      if (!links) {
+        toast.error("No accounts founded",)
       }
       const newAccounts = state.accounts
       console.log("[link]:", links.length, links[0])
-      await links.map(async (link: string) => {
+      links.map(async (link: string) => {
 
-        const account = await getAccountsApi({ link })
-        newAccounts?.push(account)
+        const accounts = await getAccountsApi({ link })
+        console.log({ accounts })
+
+        if (!accounts) {
+          return
+        }
+
+        accounts.map((account: AccountResponseType) =>
+          newAccounts?.push(account)
+        )
       })
 
       if (!newAccounts) {
         throw new Error("No accounts found")
       }
-
+      console.log({ newAccounts })
       dispatch({ type: "SET_ACCOUNTS", payload: newAccounts })
 
     } catch (error) {
+      console.error({ error })
       dispatch({ type: "SET_IS_ERROR", payload: true })
 
-      toast("Error", {
+      toast.error("Error", {
         description: "Something wen't wrong, try again",
         action: {
           label: "dismiss",
@@ -153,7 +190,7 @@ export const BankingProvider = ({ children }: { children: ReactNode }) => {
         doGetTransactions,
         doSetSelectedInstitution,
         doGetAccounts,
-        doLinkAccount
+        doLinkAccount,
       }}
     >
       {children}

@@ -4,6 +4,7 @@ import { IBankingState } from "./BankingProvider";
 type BankingActionType =
   | { type: "SET_IS_LOADING", payload: boolean }
   | { type: "SET_IS_ERROR", payload: boolean }
+  | { type: "SET_BALANCE", payload: number | null }
   | { type: "SET_SELECTED_INSTITUTION", payload: InstitutionType }
   | { type: "SET_INSTITUTIONS", payload: InstitutionType[] }
   | { type: "SET_TRANSACTIONS", payload: TransactionType[] }
@@ -45,6 +46,12 @@ export function BankingReducer(state: IBankingState, action: BankingActionType):
       return {
         ...state,
         accounts: action.payload
+      }
+    }
+    case "SET_BALANCE": {
+      return {
+        ...state,
+        balance: action.payload
       }
     }
     default:
