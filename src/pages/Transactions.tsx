@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils"
 
 
 export default function TransactionsPage() {
-  const [page, setPage] = useState(1)
+  const [page] = useState(1)
   const { accountId } = useParams()
   const { transactions, balance, isLoading, doGetTransactions } = useBankingContext()
   const navigate = useNavigate()
