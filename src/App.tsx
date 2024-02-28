@@ -8,6 +8,7 @@ import { Suspense, lazy } from 'react'
 import NotFound from './components/NotFound';
 import AuthLayout from './components/layouts/AuthLayout';
 import { Toaster } from './components/ui/sonner';
+import PageLoader from './pages/PageLoader';
 
 export default function App() {
   const LoginPage = lazy(() => import('@/pages/Login'))
@@ -17,7 +18,7 @@ export default function App() {
   const TransactionsPage = lazy(() => import('@/pages/Transactions'))
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route element={<MainLayout />}>
           <Route
@@ -34,8 +35,8 @@ export default function App() {
             element={<ProtectedRoute path={"/login"} replace={true} />}
           >
             <Route path="/" element={<HomePage />} />
-            <Route path="/account" element={<AccountPage />} />
-            <Route path="/bank" element={<TransactionsPage />} />
+            <Route path="/accounts" element={<AccountPage />} />
+            <Route path="/transactions/:accountId" element={<TransactionsPage />} />
           </Route>
           <Route path='*' element={<NotFound />} />
         </Route>

@@ -26,16 +26,19 @@ export const doRegisterUserApi = async (user: UserType) => {
 
 export const doLoginUserApi = async (user: LoginFormType) => {
   try {
+    console.log("doLoginUserApi");
     const formData = new FormData();
     formData.append("email", user.email);
     formData.append("password", user.password);
 
-    const { data } = await baseAxios.post(SUFFIX + "/login", formData, {
+    const res = await baseAxios.post(SUFFIX + "/login", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-
+    console.log("[datadoLoginUserApi]:", { res });
+    const { data } = res;
+    console.log("[datadoLoginUserApi]:", { data });
     return data;
   } catch (error) {
     return null;

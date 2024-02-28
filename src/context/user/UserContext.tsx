@@ -15,6 +15,7 @@ type UserContextType = {
   doRegister: (user: UserType) => void
   setUser: (user: UserType) => void
   setAccount: () => void
+  doLogout: () => void
 }
 
 export const UserContext = createContext({} as UserContextType)

@@ -4,7 +4,7 @@ import { IUserState } from "./UserProvider"
 type UserActionType =
   | { type: "SET_IS_LOADING", payload: boolean }
   | { type: "SET_IS_ERROR", payload: boolean }
-  | { type: "SET_USER", payload: UserType }
+  | { type: "SET_USER", payload: UserType | null }
   | { type: "SET_ACCOUNT", payload: null }
   | { type: "SET_TOKEN", payload: string | null }
 

@@ -10,13 +10,8 @@ export const NavLinks = [
     name: "Login",
   },
   {
-    id: "account",
-    to: "/account",
-    name: "Account",
-  },
-  {
-    id: "bank",
-    to: "/bank",
-    name: "Transactions",
+    id: "accounts",
+    to: "/accounts",
+    name: "Accounts",
   },
 ];

@@ -12,11 +12,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { InstitutionType } from "@/types/belvo.types"
-import { createLinkApi } from "@/api/belvoApi"
-import { useLocalStorage } from "@/hooks/useLocalStorage"
+
+import { useBankingContext } from "@/context/banking/useBankingContext"
+import LoaderComponent from "./LoaderComponent"
 
 export function ConnectForm({ institution }: { institution: InstitutionType }) {
-  const [localState, addItem] = useLocalStorage("links")
+  const { isLoading, doLinkAccount } = useBankingContext()
+
 
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
@@ -27,15 +29,9 @@ export function ConnectForm({ institution }: { institution: InstitutionType }) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fullFormdata = { ...formData, ["institution"]: institution.name }
 
-    const response = await createLinkApi(fullFormdata)
+    await doLinkAccount(formData, institution.name)
 
-    if (!response) {
-      alert("Error creating link")
-    }
-    console.log({ localState })
-    addItem(response.id)
   };
   return (
     <Dialog>
@@ -43,29 +39,38 @@ export function ConnectForm({ institution }: { institution: InstitutionType }) {
         <Button variant={"default"}>Connect</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Create connection</DialogTitle>
-            <DialogDescription>
-              Make a link to connect with your bank.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            {
-              institution.form_fields.map((field, index) => (
-                <div key={index} className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor={field.name} className="text-right capitalize">
-                    {field.name}
-                  </Label>
-                  <Input name={field.name} onChange={handleInputChange} pattern={field.validation} id={field.name} type={field.type} placeholder={field.placeholder} required={!field.optional} className="col-span-3" />
-                </div>
-              ))
-            }
-          </div>
-          <DialogFooter>
-            <Button variant={"default"} className="w-full" type="submit">Link</Button>
-          </DialogFooter>
-        </form>
+        <>
+          {
+            isLoading ? <article className="absolute w-full h-full flex items-center justify-center bg-black/60 cursor-not-allowed">
+              <LoaderComponent />
+            </article>
+              : <span>x</span>
+          }
+
+          <form onSubmit={handleSubmit}>
+            <DialogHeader>
+              <DialogTitle>Create connection</DialogTitle>
+              <DialogDescription>
+                Make a link to connect with your bank.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              {
+                institution.form_fields.map((field, index) => (
+                  <div key={index} className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor={field.name} className="text-right capitalize">
+                      {field.name}
+                    </Label>
+                    <Input name={field.name} onChange={handleInputChange} pattern={field.validation} id={field.name} type={field.type} placeholder={field.placeholder} required={!field.optional} className="col-span-3" />
+                  </div>
+                ))
+              }
+            </div>
+            <DialogFooter>
+              <Button variant={"default"} className="w-full" type="submit">Link</Button>
+            </DialogFooter>
+          </form>
+        </>
       </DialogContent>
     </Dialog>
   )

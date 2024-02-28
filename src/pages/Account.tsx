@@ -1,43 +1,31 @@
-import { getAccountsApi } from "@/api/belvoApi"
-import LoaderComponent from "@/components/LoaderComponent"
-import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { AccountResponseType } from "@/types/belvo.types"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect } from "react"
 
 import { Card } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
+import { Badge } from "@/components/ui/badge"
+import { MdCurrencyExchange } from "react-icons/md";
+import PageLoader from "./PageLoader"
+import { useBankingContext } from "@/context/banking/useBankingContext"
 
 
 
 export default function AccountPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [accounts, setAccounts] = useState<AccountResponseType[]>([])
-  const [localState] = useLocalStorage("links")
+  const { accounts, isLoading, doGetAccounts } = useBankingContext()
 
   useEffect(() => {
-    const getAccounts = async () => {
-      setIsLoading(true)
-      localState.map(async (item: string) => {
-        const account = await getAccountsApi(item)
+    doGetAccounts()
+  }, [])
 
-        console.log({ account })
-        setAccounts((prevState) => [...prevState, ...account.results])
-      })
-      setIsLoading(false)
-    }
-
-    getAccounts()
-  }, [localState])
-
-  console.log("[OUTSIDE", { accounts }, accounts[0])
+  if (isLoading) {
+    return (
+      <PageLoader />
+    )
+  }
   return (
-    <section>
-      {
-        isLoading && <article className='w-full h-svh flex items-center justify-center'>
-          <LoaderComponent />
-        </article>
-      }
+    <Suspense fallback={<PageLoader />}>
       <article className='w-full h-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 overflow-x-hidden'>
 
         {
@@ -47,18 +35,40 @@ export default function AccountPage() {
           ))
         }
       </article>
-    </section>
+    </Suspense>
   )
 }
 
 
 function InstitutionItem({ account }: { account: AccountResponseType }) {
   return (
-    <Card className='w-[350px] fade-in duration-300 h-full max-h-64 md:w-full relative flex flex-col justify-between p-4'>
+    <Card className='w-full fade-in duration-300 h-full max-h-64 md:w-full relative flex flex-col justify-between p-4'>
       <h3 className='mb-2'>{account.name}</h3>
-      <article>{account.institution.name}</article>
-      <Label>{account.institution.type}</Label>
+      <p className="text-2xl">{account.institution.name}</p>
+      <p className="text-2xl flex items-center my-4">
 
+        <span>
+          {
+            new Intl.NumberFormat("es-MX", {
+              style: "currency",
+              currency: account.currency,
+              minimumFractionDigits: 2,
+            }).format(account.balance.available)
+          }
+        </span>
+      </p>
+      <p className="my-2 flex items-center justify-start">
+        <span className="flex items-center my-2">
+          <MdCurrencyExchange className="mx-2" />
+          <Badge>{account.currency}</Badge>
+        </span>
+
+      </p>
+      <Button asChild>
+        <Link to={`/transactions/${(account.link)}`}>
+          See transactions
+        </Link>
+      </Button>
     </Card>
   )
 }

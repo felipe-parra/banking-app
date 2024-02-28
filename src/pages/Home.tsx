@@ -18,7 +18,6 @@ export default function HomePage() {
 
   return (
     <section>
-
       {
         isLoading && <article className='w-full h-svh flex items-center justify-center'>
           <LoaderComponent />

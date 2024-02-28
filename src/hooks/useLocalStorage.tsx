@@ -22,7 +22,27 @@ export const useLocalStorage = (key = "", initialValue = []) => {
     }
   };
 
+  const removeItem = (item: string) => {
+    try {
+      const updatedValue = storedValue.filter((i: string) => i !== item);
+
+      setStoredValue(updatedValue);
+      window.localStorage.setItem(key, JSON.stringify(updatedValue));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const clear = () => {
+    try {
+      setStoredValue([]);
+      window.localStorage.removeItem(key);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 
-  return [storedValue, addItem];
+
+  return { storedValue, addItem, removeItem, clear };
 }

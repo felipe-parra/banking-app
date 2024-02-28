@@ -21,8 +21,15 @@ export const getAllInstitutionsApi = async (): Promise<
   }
 };
 
-export const getAccountsApi = async (link: string, page = 1) => {
+export const getAccountsApi = async ({
+  link,
+  page = 1,
+}: {
+  link: string;
+  page?: number;
+}) => {
   try {
+    console.log({ page, link });
     const { data } = await baseAxios({
       method: "GET",
       url: `${SUFFIX}/accounts?page=${page}&link=${link}`,
@@ -30,18 +37,26 @@ export const getAccountsApi = async (link: string, page = 1) => {
 
     console.log({ data });
 
-    return data.data;
+    return data.data.results;
   } catch (error) {
     console.error({ error });
     return null;
   }
 };
 
-export const getTransactionsApi = async (link: string, page: number) => {
+export const getTransactionsApi = async ({
+  link,
+  page,
+}: {
+  link: string;
+  page?: number;
+}) => {
   try {
+    console.log({ page, link });
+
     const { data } = await baseAxios({
       method: "GET",
-      url: `${SUFFIX}/transactions?page=${page}&account=${link}`,
+      url: `${SUFFIX}/transactions?page=${page}&link=${link}`,
     });
 
     console.log(data.data);
