@@ -15,7 +15,7 @@ Frontend was build it using React & TypeScript with ContextAPI, react-router-dom
 
   
 ## Running on local
-If you wanna run locally this project you should have backend url or run the backend locally [link](link), and update your file `.env` with your value, give you an example at `.env.example`
+If you wanna run locally this project you should have backend url or run the backend locally [link](https://github.com/felipe-parra/banking-api), and update your file `.env` with your value, give you an example at `.env.example`
 
 1. Clone this repo
 ```sh
